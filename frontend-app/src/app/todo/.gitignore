@@ -1,0 +1,10 @@
+node_modules
+.next
+dist
+.env
+
+frontend-app/node_modules
+frontend-app/.next
+
+backend-api/node_modules
+backend-api/dist
