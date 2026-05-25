@@ -69,8 +69,17 @@ export default function TodoPage() {
         await api.get("/todos");
 
       setTodos(response.data);
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
+
+      if (
+        error.response?.status === 401
+      ) {
+        window.location.href =
+          "/login";
+
+        return;
+      }
 
       toast.error(
         "Failed to fetch todos"
@@ -263,9 +272,8 @@ export default function TodoPage() {
 
             <button
               onClick={() => {
-                localStorage.removeItem(
-                  "token"
-                );
+                document.cookie =
+                  "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
 
                 window.location.href =
                   "/login";
@@ -475,7 +483,6 @@ export default function TodoPage() {
                   {editingId ===
                   todo.id ? (
                     <div className="flex gap-2">
-
                       <input
                         type="text"
                         value={editText}
@@ -501,7 +508,6 @@ export default function TodoPage() {
                       >
                         Save
                       </button>
-
                     </div>
                   ) : (
                     <>
@@ -518,7 +524,6 @@ export default function TodoPage() {
                       </p>
 
                       <div className="flex gap-2 mt-2 flex-wrap">
-
                         {todo.priority && (
                           <span
                             className={`text-xs px-3 py-1 rounded-full text-white ${
@@ -543,7 +548,6 @@ export default function TodoPage() {
                             ).toLocaleDateString()}
                           </span>
                         )}
-
                       </div>
                     </>
                   )}
@@ -551,7 +555,6 @@ export default function TodoPage() {
               </div>
 
               <div className="flex gap-2">
-
                 <button
                   onClick={() => {
                     setEditingId(
@@ -575,7 +578,6 @@ export default function TodoPage() {
                 >
                   Delete
                 </button>
-
               </div>
             </div>
           ))}

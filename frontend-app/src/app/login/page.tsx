@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 import api from "@/lib/axios";
+import Cookies from "js-cookie";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -32,15 +33,21 @@ export default function LoginPage() {
 
       console.log(response.data);
 
-      localStorage.setItem(
-        "token",
-        response.data.access_token
-      );
+      Cookies.set(
+  "token",
+  response.data.access_token,
+  {
+    expires: 7,
+  }
+);
 
-      localStorage.setItem(
-        "userId",
-        response.data.user.id
-      );
+Cookies.set(
+  "userId",
+  String(response.data.user.id),
+  {
+    expires: 7,
+  }
+);
 
       alert("Login Successful");
 

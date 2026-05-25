@@ -1,16 +1,14 @@
 import axios from "axios";
+import Cookies from "js-cookie";
 
 const api = axios.create({
-  baseURL: "http://localhost:3001",
+  baseURL: "http://localhost:5000",
   withCredentials: true,
 });
 
 api.interceptors.request.use(
   (config) => {
-    const token =
-      localStorage.getItem("token");
-
-    console.log("TOKEN:", token);
+    const token = Cookies.get("token");
 
     if (token) {
       config.headers.Authorization =
@@ -20,6 +18,20 @@ api.interceptors.request.use(
     return config;
   },
   (error) => {
+    return Promise.reject(error);
+  }
+);
+
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      Cookies.remove("token");
+      Cookies.remove("userId");
+
+      window.location.href = "/login";
+    }
+
     return Promise.reject(error);
   }
 );
